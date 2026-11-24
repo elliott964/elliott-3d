@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>elliott-3d</title>
+<meta name="description" content="a tiny 3d modeler with no ui, made to be driven by an AI over MCP.">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 620px; margin: 12vh auto; padding: 0 20px; font: 17px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  h1 { font-size: 1.1em; margin: 0 0 1.2em; }
+  img { display: block; width: 100%; height: auto; border-radius: 4px; margin: 1.6em 0; }
+  pre { overflow-x: auto; padding: 14px 16px; border-radius: 4px; font-size: 0.85em; background: color-mix(in srgb, currentColor 8%, transparent); }
+  a { color: inherit; }
+  p.small { opacity: .6; font-size: .85em; }
+  button { font: inherit; font-size: .9em; color: inherit; background: none; border: 1px solid currentColor; border-radius: 4px; padding: 6px 14px; cursor: pointer; }
+  button:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+</style>
+</head>
+<body>
+<h1>elliott-3d</h1>
+
+<p>a tiny 3d modeler with no ui, made to be driven by an AI over MCP. it builds stuff from tool calls, then takes a picture.</p>
+
+<p><button id="copy" type="button">copy install prompt for your ai</button></p>
+
+<img src="table.png" alt="a small wooden table with a blue vase on it, rendered by elliott-3d">
+<p class="small">that's a table and a vase, made with plain tool calls.</p>
+
+<pre>cargo build --release</pre>
+
+<p>then add it to your MCP client as a stdio server:</p>
+
+<pre>{
+  "mcpServers": {
+    "elliott-3d": { "command": "/path/to/elliott-3d" }
+  }
+}</pre>
+
+<p>no gpu, no textures, no booleans. y is up.</p>
+
+<p><a href="https://github.com/elliott964/elliott-3d">github</a></p>
+<script>
+  const ask = "install the elliott-3d mcp server for me. clone https://github.com/elliott964/elliott-3d, run cargo build --release, then add target/release/elliott-3d to your mcp config as a stdio server (use the absolute path to the binary) and reload. then build a small table with a vase on it and render it to check it works.";
+  const btn = document.getElementById("copy");
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(ask);
+    } catch {
+      const t = document.createElement("textarea");
+      t.value = ask;
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand("copy");
+      t.remove();
+    }
+    btn.textContent = "copied";
+    setTimeout(() => (btn.textContent = "copy install prompt for your ai"), 1500);
+  });
+</script>
+</body>
+</html>
